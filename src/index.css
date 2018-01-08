@@ -1,10 +1,30 @@
 body {
   font-size: 2em;
+  user-select: none;
 }
 
 .main {
   max-width: 400px;
   background-color: #f3f2f2;
+  padding: 20px;
+  margin: 0 auto;
+  border-radius: 10px;
+  border: 2px solid #adadad;
+  box-shadow: 10px 10px 5px #6d6a6a;
+}
+
+.screen {
+  background-color: #b5d4b5;
+  height: 2.5em;
+  border-radius: 10px;
+  border: 2px solid #b5a2a2;
+  margin-top: 30px;
+}
+
+p {
+  text-align: end;
+  margin-right: 10px;
+  padding-top: 8px;
 }
 
 .mainButtonContainer {
@@ -20,6 +40,7 @@ body {
 
 .topButtonContainer {
   display: flex;
+  margin-top: 50px;
 }
 
 .sideButtonContainer {
@@ -57,7 +78,10 @@ body {
 }
 
 .innerButton:active {
-  
+  box-shadow: unset;
+  height: calc(90% - 1px);
+  width: calc(80% + 3px);
+  transform: translateY(3px);
 }
 
 span {
