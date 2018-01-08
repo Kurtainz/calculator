@@ -1,0 +1,80 @@
+body {
+  font-size: 2em;
+}
+
+.main {
+  max-width: 400px;
+  background-color: #f3f2f2;
+}
+
+.mainButtonContainer {
+  display: flex;
+}
+
+.buttonContainer {
+  flex-grow: 3;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row-reverse;
+}
+
+.topButtonContainer {
+  display: flex;
+}
+
+.sideButtonContainer {
+  flex-grow: 1;
+  order: 2;
+}
+
+.sideButtonContainer .numButton {
+  width: 100%;
+  height: 50%;
+}
+
+.sideButtonContainer .innerButton {
+  height: 95%;
+}
+
+.numButton {
+  width: calc(100% / 3);
+  height: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.innerButton {
+  position: relative;
+  background-color: #5f5959;
+  color: #fff;
+  text-align: center;
+  width: 80%;
+  height: 90%;
+  margin: 0 auto;
+  border-radius: 5px;
+  box-shadow: 3px 3px 0px 0px #383333;
+}
+
+.innerButton:active {
+  
+}
+
+span {
+  cursor: default;
+}
+
+.numButton[itemprop="0"] {
+  flex-grow: 2;
+}
+
+.numButton[itemprop="0"] .innerButton {
+  width: 90%;
+}
+
+.buttonSpan {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
