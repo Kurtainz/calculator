@@ -7,9 +7,9 @@ const Calc = (props) => {
     const generateNumButtons = () => {
         const buttons = [];
         for (let i = 9; i >= 0; i--) {
-            buttons.push(<Button key={i} val={i} className="numButton" />);
+            buttons.push(<Button key={i} val={i} className="numButton" handleButtonPress={props.handleButtonPress} />);
         }
-        buttons.push(<Button key="." val="." className="numButton" />);
+        buttons.push(<Button key="." val="." className="numButton" handleButtonPress={props.handleButtonPress} />);
         return buttons;
     }
 
@@ -17,7 +17,7 @@ const Calc = (props) => {
         const operators = [
             'C', '÷', 'x', '-', '+', '='  
         ];
-        return operators.map(operator => <Button className="numButton" key={operator} val={operator} />);
+        return operators.map(operator => <Button className="numButton" key={operator} val={operator} handleButtonPress={props.handleButtonPress} />);
     }
 
     const numButtons = generateNumButtons();
@@ -28,7 +28,7 @@ const Calc = (props) => {
     return(
         <div className="main">
             <div className="screen">
-                <Screen val={props.val} />
+                <Screen currentVal={props.currentVal} currentSum={props.currentSum} />
             </div>
             <div className="topButtonContainer">
                 {topRowButtons}
@@ -47,15 +47,18 @@ const Calc = (props) => {
 
 const Screen = (props) => {
     return(
-        <p>{props.val}</p>
+        <div>
+            <p className="currentSum">{props.currentSum}</p>
+            <p>{props.currentVal}</p>
+        </div>
     )
 }
 
 const Button = (props) => {
     return(
-        <div className={props.className} itemProp={props.val}>
-            <div className="innerButton">
-                <span className="buttonSpan">{props.val}</span>
+        <div className={props.className}>
+            <div className="innerButton" itemProp={props.val} onClick={props.handleButtonPress}>
+                <span itemProp={props.val} className="buttonSpan">{props.val}</span>
             </div>
         </div>
     )
@@ -64,13 +67,64 @@ const Button = (props) => {
 class App extends React.Component {
 
     state = {
-        val : 0
+        currentVal : "0",
+        currentSum : []
+    }
+
+    handleButtonPress = (event) => {
+        const clickedVal = event.target.getAttribute('itemprop');
+        switch (true) {
+            case !isNaN(Number(clickedVal)) || clickedVal === ".":
+                this.handleNumberPress(clickedVal);
+                break;
+            case clickedVal === "C":
+                this.clearScreen();
+                break;
+            case clickedVal === "=":
+                this.completeSum();
+                break;
+            default:
+                this.addToSum(clickedVal);
+                break;
+        }
+    }
+
+    handleNumberPress = (clickedVal) => {
+        let newVal = this.state.currentVal;
+        if (newVal === "0") {
+            newVal = clickedVal;
+        }
+        else {
+            newVal += clickedVal;
+        }
+        this.setState(prevState => ({
+            currentVal : newVal
+        }));
+    }
+
+    clearScreen = () => this.setState(prevState => ({ currentVal: "0" }));
+
+    addToSum = (clickedVal) => {
+        let newSumArray = this.state.currentSum.slice();
+        newSumArray.push(this.state.currentVal, clickedVal);
+        this.setState(prevState => ({ currentSum : newSumArray}), () => console.log(this.state.currentSum));
+        this.clearScreen();
+    }
+
+    completeSum = () => {
+        // Turns the expression array into a string representation of the current sum
+        const expression = this.state.currentSum.slice().join("") + this.state.currentVal;
+        const sumResult = eval(expression);
+        this.setState(prevState => ({
+            currentVal : sumResult,
+            currentSum : []
+        }));
     }
 
     render() {
         return(
             <div>
-                <Calc val={this.state.val} />
+                <Calc currentSum={this.state.currentSum} currentVal={this.state.currentVal} handleButtonPress={this.handleButtonPress} />
             </div>
         )
     }
