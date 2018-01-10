@@ -80,6 +80,7 @@ class App extends React.Component {
 
     handleButtonPress = (event) => {
         const clickedVal = event.target.getAttribute('itemprop');
+        
         this.checkEndState().then(() => {
             switch (true) {
                 case !isNaN(Number(clickedVal)) || clickedVal === ".":
@@ -89,7 +90,7 @@ class App extends React.Component {
                     this.clearScreen();
                     break;
                 case clickedVal === "=":
-                    this.completeSum();
+                    this.completeSum(clickedVal);
                     break;
                 default:
                     this.addToSum(clickedVal);
@@ -118,13 +119,18 @@ class App extends React.Component {
 
     // Puts number presses on the screen
     handleNumberPress = (clickedVal) => {
-        console.log(this.state.currentVal);
         if (this.state.currentVal.length >= 18) {
             return;
         }
         let newVal = this.state.currentVal;
         if (newVal === "0") {
+            if (clickedVal === ".") {
+                clickedVal = "0.";
+            }
             newVal = clickedVal;
+        }
+        else if (clickedVal === "." && newVal.includes(".")) {
+            return;
         }
         else {
             newVal += clickedVal;
@@ -151,6 +157,10 @@ class App extends React.Component {
 
     // Adds each step of the current equation to an array on the state
     addToSum = (clickedVal) => {
+        // If current number on screen is 0, ignore this button press
+        if (Number(this.state.currentVal) === 0) {
+            return;
+        }
         let newSumArray = this.state.currentSum.slice();
         if (clickedVal === "x") {
             clickedVal = "*";
@@ -164,7 +174,7 @@ class App extends React.Component {
     }
 
     // Called when "=" is pressed
-    completeSum = () => {
+    completeSum = (clickedVal) => {
         // Turns the expression array into a string representation of the current sum and add the last number
         const expression = this.state.currentSum.slice().join("") + this.state.currentVal;
         let sumResult;
@@ -177,6 +187,7 @@ class App extends React.Component {
         if (sumResult.length > 18) {
             sumResult = "Error";
         }
+        this.addToSum(clickedVal);
         this.setState(prevState => ({
             currentVal : sumResult,
             endState : true

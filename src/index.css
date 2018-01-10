@@ -101,11 +101,11 @@ span {
   cursor: default;
 }
 
-.numButton[itemprop="0"] {
+.numButton:nth-of-type(10) {
   flex-grow: 2;
 }
 
-.numButton[itemprop="0"] .innerButton {
+.numButton:nth-of-type(10) .innerButton {
   width: 90%;
 }
 
